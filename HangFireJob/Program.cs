@@ -16,6 +16,7 @@ services.AddSingleton<IExampleJob, ExampleJob>();
 services.AddHangfire((configuration) =>
 {
     configuration.SetDataCompatibilityLevel(CompatibilityLevel.Version_170);
+    configuration.UseInMemoryStorage();
     configuration.UseRedisStorage("127.0.0.1:6379", new Hangfire.Redis.RedisStorageOptions
     {
         Prefix = "hangfire:",
