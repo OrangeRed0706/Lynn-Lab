@@ -4,10 +4,13 @@ namespace RedisLab.Interfaces
 {
     public interface IRedisAccessor
     {
-        Task LockTakeAsync(string key, RedisValue token);
-        Task<T> ObjectGetAsync<T>(string key);
-        Task<bool> KeyDeleteAsync(string key);
-        Task<bool> KeyExistAsync(string key);
-        Task PublishAsync(string groupName, string channel, string key);
+        Task<bool> LockAsync(string key, TimeSpan expiry);
+        Task<bool> LockAsync(string key, RedisValue redisValue, TimeSpan expiry);
+        Task<bool> SetStringAsync(string key, RedisValue value);
+        Task<RedisValue> GetStringAsync(string key);
+        Task<bool> LockReleaseAsync(string key, RedisValue value);
+        Task<long> StringDecrementAsync(string key);
+        Task<T?> ObjectGetAsync<T>(string key);
+
     }
 }

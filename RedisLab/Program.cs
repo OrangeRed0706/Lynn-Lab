@@ -14,22 +14,24 @@ using (var scope = host.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     var logger = services.GetRequiredService<ILogger<Program>>();
+    //var ticketService = services.GetRequiredService<TicketService>();
+    //await ticketService.Init();
+    //await ticketService.GoSnapUp();
     var labDemo = services.GetRequiredService<LabDemo>();
-
     await labDemo.Run();
-
 }
 host.Run();
 
 static IHostBuilder CreateHostBuilder(string[] args) =>
-    Host.CreateDefaultBuilder(args)
-        .ConfigureServices((hostContext, services) =>
-        {
-            services.AddRedisManager(hostContext.Configuration);
-            services.AddSingleton<IRedisAccessor, RedisAccessor>();
-            services.AddSingleton<LabDemo>();
-        }).ConfigureAppConfiguration(config =>
+    Host.CreateDefaultBuilder(args).ConfigureAppConfiguration(config =>
         {
             config.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+        })
+        .ConfigureServices((hostContext, services) =>
+        {
+            services.AddRedisManager(hostContext.Configuration.GetSection("Redis"));
+            services.AddSingleton<IRedisAccessor, RedisAccessor>();
+            services.AddSingleton<LabDemo>();
+            services.AddSingleton<TicketService>();
         });
 
